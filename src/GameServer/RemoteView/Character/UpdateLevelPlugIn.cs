@@ -42,7 +42,7 @@ public class UpdateLevelPlugIn : IUpdateLevelPlugIn
 
         await connection.SendCharacterLevelUpdateAsync(
             (ushort)charStats[Stats.Level],
-            (ushort)Math.Max(selectedCharacter.LevelUpPoints, 0),
+            (ushort)Math.Clamp(selectedCharacter.LevelUpPoints, 0, ushort.MaxValue),
             (ushort)charStats[Stats.MaximumHealth],
             (ushort)charStats[Stats.MaximumMana],
             (ushort)charStats[Stats.MaximumShield],
