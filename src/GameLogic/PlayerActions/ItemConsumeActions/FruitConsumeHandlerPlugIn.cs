@@ -76,6 +76,19 @@ public class FruitConsumeHandlerPlugIn : BaseConsumeHandlerPlugIn
             var randomPoints = (byte)Math.Min(maximumRemainingPoints, this.GetRandomPoints(isAdding));
             if (isAdding)
             {
+                if (statAttribute.MaximumValue is { } maximumValue
+                    && player.Attributes![statAttribute] is { } current
+                    && current + randomPoints > maximumValue)
+                {
+                    randomPoints = (byte)Math.Max(0, maximumValue - current);
+                }
+
+                if (randomPoints == 0)
+                {
+                    await player.InvokeViewPlugInAsync<IFruitConsumptionResponsePlugIn>(p => p.ShowResponseAsync(FruitConsumptionResult.PlusPreventedByMaximum, 0, statAttribute)).ConfigureAwait(false);
+                    return true;
+                }
+
                 player.Attributes![statAttribute] += randomPoints;
                 player.SelectedCharacter.UsedFruitPoints += randomPoints;
                 await player.InvokeViewPlugInAsync<IFruitConsumptionResponsePlugIn>(p => p.ShowResponseAsync(FruitConsumptionResult.PlusSuccess, randomPoints, statAttribute)).ConfigureAwait(false);
