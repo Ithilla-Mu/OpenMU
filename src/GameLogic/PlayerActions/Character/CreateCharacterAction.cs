@@ -104,6 +104,9 @@ public class CreateCharacterAction
         character.CreateDate = DateTime.UtcNow;
         character.KeyConfiguration = CreateDefaultKeyConfiguration();
 
+        // Nothing else ever grants extensions, so every character starts with the maximum.
+        character.InventoryExtensions = InventoryConstants.MaximumNumberOfExtensions;
+
         // Distinct, because a character class may define the same stat attribute more than once (data
         // which got duplicated by an update); a character must never hold an attribute twice.
         var attributes = character.CharacterClass.StatAttributes
