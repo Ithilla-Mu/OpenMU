@@ -47,6 +47,8 @@ public abstract class GameConfigurationInitializerBase : InitializerBase
         this.GameConfiguration.MaximumVaultMoney = int.MaxValue;
         this.GameConfiguration.PreventExperienceOverflow = false;
         this.GameConfiguration.ClampMoneyOnPickup = false;
+        this.GameConfiguration.ClassAwareDropMode = ClassAwareDropMode.Off;
+        this.GameConfiguration.ClassAwareDropWeight = 1.0f;
         this.GameConfiguration.ExcellentItemDropLevelDelta = 25;
         this.GameConfiguration.RecoveryInterval = 3000;
         this.GameConfiguration.MaximumLetters = 50;

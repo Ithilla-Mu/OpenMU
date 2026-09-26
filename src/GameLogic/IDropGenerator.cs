@@ -24,13 +24,15 @@ public interface IDropGenerator
     /// Generates an item based on a <see cref="DropItemGroup"/>.
     /// </summary>
     /// <param name="group">The <see cref="DropItemGroup"/> which defines which item should be generated.</param>
+    /// <param name="player">The player who will receive the item, used for class-aware drop weighting. <see langword="null"/> means class-blind.</param>
     /// <returns>The generated item or <see langword="null"/>.</returns>
-    Item? GenerateItemDrop(DropItemGroup group);
+    Item? GenerateItemDrop(DropItemGroup group, Player? player = null);
 
     /// <summary>
     /// Generates an item based on a <see cref="DropItemGroup"/>s.
     /// </summary>
     /// <param name="groups">The <see cref="DropItemGroup"/>s which define which item should be generated.</param>
+    /// <param name="player">The player who will receive the item, used for class-aware drop weighting. <see langword="null"/> means class-blind.</param>
     /// <returns>The generated item, money and drop effect of the selected group.</returns>
-    (Item? Item, uint? Money, ItemDropEffect DropEffect) GenerateItemDrop(IEnumerable<DropItemGroup> groups);
+    (Item? Item, uint? Money, ItemDropEffect DropEffect) GenerateItemDrop(IEnumerable<DropItemGroup> groups, Player? player = null);
 }

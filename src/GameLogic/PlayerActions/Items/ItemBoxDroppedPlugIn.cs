@@ -36,7 +36,7 @@ public sealed class ItemBoxDroppedPlugIn : IItemDropPlugIn
         }
 
         cancelArgs.Success = true;
-        var (item, droppedMoneyAmount, dropEffect) = player.GameContext.DropGenerator.GenerateItemDrop(itemDropGroups);
+        var (item, droppedMoneyAmount, dropEffect) = player.GameContext.DropGenerator.GenerateItemDrop(itemDropGroups, player);
         if (droppedMoneyAmount is not null)
         {
             var droppedMoney = new DroppedMoney(droppedMoneyAmount.Value, player.Position, player.CurrentMap!);

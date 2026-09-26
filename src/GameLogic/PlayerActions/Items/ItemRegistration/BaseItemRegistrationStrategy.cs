@@ -126,7 +126,7 @@ public abstract class BaseItemRegistrationStrategy : IItemRegistrationStrategy
 
             if (rule.RewardDropItemGroup is { } dropGroup && Rand.NextRandomBool(dropGroup.Chance))
             {
-                var droppedItem = player.GameContext.DropGenerator.GenerateItemDrop(dropGroup);
+                var droppedItem = player.GameContext.DropGenerator.GenerateItemDrop(dropGroup, player);
                 if (droppedItem != null)
                 {
                     var dropCoordinates = player.CurrentMap!.Terrain.GetRandomCoordinate(player.Position, 2);

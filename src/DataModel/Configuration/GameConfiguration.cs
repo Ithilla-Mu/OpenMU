@@ -154,6 +154,19 @@ public partial class GameConfiguration
     public byte MaximumItemOptionLevelDrop { get; set; }
 
     /// <summary>
+    /// Gets or sets the mode which controls whether the drop generator weighs or filters item
+    /// picks by the classes of the player (and, for a kill, their party) receiving the drop.
+    /// </summary>
+    public ClassAwareDropMode ClassAwareDropMode { get; set; }
+
+    /// <summary>
+    /// Gets or sets the weight given to a usable item over an off-class one when
+    /// <see cref="ClassAwareDropMode"/> is <see cref="ClassAwareDropMode.Prefer"/>. Values below 1
+    /// are clamped to 1 (no preference).
+    /// </summary>
+    public float ClassAwareDropWeight { get; set; }
+
+    /// <summary>
     /// Gets or sets the accumulated damage which needs to be done to decrease <see cref="Item.Durability"/> of a defending item by 1.
     /// </summary>
     public double DamagePerOneItemDurability { get; set; }
