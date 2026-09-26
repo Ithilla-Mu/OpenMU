@@ -83,6 +83,12 @@ public class Account
     public DateTime? ChatBanUntil { get; set; }
 
     /// <summary>
+    /// Gets or sets the date and time (UTC) at which the account's last game session ended.
+    /// </summary>
+    /// <remarks><see langword="null"/> when no session has ended since the column was added.</remarks>
+    public DateTime? LastLogoutAt { get; set; }
+
+    /// <summary>
     /// Gets or sets the unlocked character classes which are locked by default.
     /// </summary>
     /// <remarks>

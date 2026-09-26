@@ -1005,6 +1005,10 @@ public class Player : AsyncDisposable, IBucketMapObserver, IAttackable, IAttacke
                     }
                 }
 
+                // Before the subscribers: GameContext.RemovePlayerAsync takes the account off the list
+                // behind /api/is-online, which must never read offline without a fresh stamp.
+                await this.StampLastLogoutAsync().ConfigureAwait(false);
+
                 if (this.PlayerDisconnected is { } disconnectedEventHandler)
                 {
                     this.PlayerDisconnected = null;
@@ -1357,6 +1361,12 @@ public class Player : AsyncDisposable, IBucketMapObserver, IAttackable, IAttacke
         // after the player was already added to the game - never raises that event, and the fields
         // below drop the handler which could still do it. Removing here is the last line of defense,
         // and it is idempotent, so it does nothing on the regular path.
+        // IsConnected is still true only on that path, where DisconnectAsync never stamped.
+        if (this.IsConnected)
+        {
+            await this.StampLastLogoutAsync().ConfigureAwait(false);
+        }
+
         try
         {
             await this.GameContext.RemovePlayerAsync(this).ConfigureAwait(false);
@@ -2041,6 +2051,28 @@ public class Player : AsyncDisposable, IBucketMapObserver, IAttackable, IAttacke
         {
             var cancelAction = new TradeCancelAction();
             await cancelAction.CancelTradeAsync(this).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Stamps <see cref="Account.LastLogoutAt"/> and saves it. Runs before the player leaves
+    /// the game context's player list, so an offline account always carries a fresh stamp.
+    /// </summary>
+    private async ValueTask StampLastLogoutAsync()
+    {
+        if (this.IsTemplatePlayer || this.Account is not { } account)
+        {
+            return;
+        }
+
+        try
+        {
+            account.LastLogoutAt = DateTime.UtcNow;
+            await this.SaveProgressAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            this.Logger.LogError(ex, "Couldn't save the logout timestamp of player {Player}.", this);
         }
     }
 }
