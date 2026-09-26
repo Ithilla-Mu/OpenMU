@@ -69,7 +69,7 @@ public abstract class MiniGameStartBasePlugIn<TConfiguration, TGameState> : Peri
             return ValueTask.FromResult<TimeSpan?>(TimeSpan.Zero);
         }
 
-        var timeNow = new TimeOnly(DateTime.UtcNow.TimeOfDay.Ticks);
+        var timeNow = TimeOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, gameContext.ServerTimeZone));
         var nextRun = this.Configuration?.Timetable.Where(time => time > timeNow).Order().FirstOrDefault();
         return ValueTask.FromResult(nextRun - timeNow);
     }
