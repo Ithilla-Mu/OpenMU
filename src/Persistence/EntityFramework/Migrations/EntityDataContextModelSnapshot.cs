@@ -2107,7 +2107,25 @@ namespace MUnique.OpenMU.Persistence.EntityFramework.Migrations
                     b.Property<bool>("IsBoundToCharacter")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsDroppable")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPersonalStoreSellable")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsQuestItem")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRepairable")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsSellableToNpc")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsStorable")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsTradable")
                         .HasColumnType("boolean");
 
                     b.Property<Guid?>("ItemSlotId")
