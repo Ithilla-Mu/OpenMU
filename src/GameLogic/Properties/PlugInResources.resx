@@ -243,6 +243,12 @@
   <data name="ResetFeaturePlugIn_Description" xml:space="preserve">
     <value>Provides configuration for the reset feature.</value>
   </data>
+  <data name="ResetAvailableNotificationPlugIn_Name" xml:space="preserve">
+    <value>Reset available notification</value>
+  </data>
+  <data name="ResetAvailableNotificationPlugIn_Description" xml:space="preserve">
+    <value>Notifies a player in-game when their character reaches the level at which it can be reset.</value>
+  </data>
   <data name="EndDuelWhenLeavingDuelMapPlugIn_Name" xml:space="preserve">
     <value>End Duel When Leaving Duel Map</value>
   </data>

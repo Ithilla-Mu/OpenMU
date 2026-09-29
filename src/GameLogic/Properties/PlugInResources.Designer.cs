@@ -2304,6 +2304,24 @@ namespace MUnique.OpenMU.GameLogic.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Notifies a player in-game when their character reaches the level at which it can be reset..
+        /// </summary>
+        public static string ResetAvailableNotificationPlugIn_Description {
+            get {
+                return ResourceManager.GetString("ResetAvailableNotificationPlugIn_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reset available notification.
+        /// </summary>
+        public static string ResetAvailableNotificationPlugIn_Name {
+            get {
+                return ResourceManager.GetString("ResetAvailableNotificationPlugIn_Name", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Handle Reset Character NPC Request.
         /// </summary>
         public static string ResetCharacterNpcPlugin_Description {
