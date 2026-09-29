@@ -1314,4 +1314,10 @@
   <data name="RaklionPlugIn_Description" xml:space="preserve">
     <value>The event in the hatchery of raklion: when all spider eggs are destroyed, Selupan appears. After the battle, the hatchery is closed for some time.</value>
   </data>
+  <data name="QuestMasterNpcPlugIn_Name" xml:space="preserve">
+    <value>Quest master NPC</value>
+  </data>
+  <data name="QuestMasterNpcPlugIn_Description" xml:space="preserve">
+    <value>Leo the Helper hands out, tracks and rewards a linear chain of kill quests (group 100) shown in the quest window.</value>
+  </data>
 </root>

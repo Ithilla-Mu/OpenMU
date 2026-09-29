@@ -5,6 +5,7 @@
 namespace MUnique.OpenMU.GameServer.RemoteView.Quest;
 
 using System.Runtime.InteropServices;
+using MUnique.OpenMU.GameLogic.QuestMaster;
 using MUnique.OpenMU.GameLogic.Views.Quest;
 using MUnique.OpenMU.GameServer.MessageHandler.Quests;
 using MUnique.OpenMU.Network;
@@ -41,14 +42,21 @@ public class CurrentlyActiveQuestsPlugIn : ICurrentlyActiveQuestsPlugIn
             return;
         }
 
+        const int maxQuestsPerPacket = 62;
+        var activeQuests = character.QuestStates
+            .Where(state => state.Group != QuestConstants.LegacyQuestGroup && state.ActiveQuest != null)
+            .Select(s => s.ActiveQuest!)
+            .Take(maxQuestsPerPacket)
+            .ToList();
+
+        // The client only lists quests whose text it has cached, so the text has to precede the list.
+        foreach (var quest in activeQuests.Where(q => q.Group == QuestMasterConstants.QuestGroup))
+        {
+            await QuestMasterText.SendQuestTextAsync(this._player, quest).ConfigureAwait(false);
+        }
+
         int Write()
         {
-            const int maxQuestsPerPacket = 62;
-            var activeQuests = character.QuestStates
-                .Where(state => state.Group != QuestConstants.LegacyQuestGroup && state.ActiveQuest != null)
-                .Select(s => s.ActiveQuest!)
-                .Take(maxQuestsPerPacket)
-                .ToList();
             var size = QuestStateListRef.GetRequiredSize(activeQuests.Count);
             var span = connection.Output.GetSpan(size)[..size];
             var message = new QuestStateListRef(span);

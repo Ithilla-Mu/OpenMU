@@ -5,8 +5,10 @@
 namespace MUnique.OpenMU.GameServer.MessageHandler.Quests;
 
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 using MUnique.OpenMU.GameLogic;
 using MUnique.OpenMU.GameLogic.PlayerActions.Quests;
+using MUnique.OpenMU.GameLogic.QuestMaster;
 using MUnique.OpenMU.Network.Packets.ClientToServer;
 using MUnique.OpenMU.PlugIns;
 
@@ -31,6 +33,12 @@ public class QuestSelectRequestHandlerPlugIn : ISubPacketHandlerPlugIn
     public async ValueTask HandlePacketAsync(Player player, Memory<byte> packet)
     {
         QuestSelectRequest request = packet;
+        if (request.QuestGroup == QuestMasterConstants.QuestGroup)
+        {
+            player.Logger.LogDebug("Quest group {0} is handled by the quest master NPC; ignoring the request.", request.QuestGroup);
+            return;
+        }
+
         await this._questSelectAction.SelectQuestAsync(player, (short)request.QuestGroup, (short)request.QuestNumber).ConfigureAwait(false);
     }
 }

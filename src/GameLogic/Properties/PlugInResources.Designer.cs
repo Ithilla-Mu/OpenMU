@@ -2304,6 +2304,24 @@ namespace MUnique.OpenMU.GameLogic.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Leo the Helper hands out, tracks and rewards a linear chain of kill quests (group 100) shown in the quest window..
+        /// </summary>
+        public static string QuestMasterNpcPlugIn_Description {
+            get {
+                return ResourceManager.GetString("QuestMasterNpcPlugIn_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Quest master NPC.
+        /// </summary>
+        public static string QuestMasterNpcPlugIn_Name {
+            get {
+                return ResourceManager.GetString("QuestMasterNpcPlugIn_Name", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Notifies a player in-game when their character reaches the level at which it can be reset..
         /// </summary>
         public static string ResetAvailableNotificationPlugIn_Description {

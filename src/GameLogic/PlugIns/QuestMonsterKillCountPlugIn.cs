@@ -7,6 +7,8 @@ namespace MUnique.OpenMU.GameLogic.PlugIns;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
 using MUnique.OpenMU.GameLogic.NPC;
+using MUnique.OpenMU.GameLogic.QuestMaster;
+using MUnique.OpenMU.GameLogic.Views.Quest;
 using MUnique.OpenMU.PlugIns;
 
 /// <summary>
@@ -54,6 +56,11 @@ public class QuestMonsterKillCountPlugIn : IAttackableGotKilledPlugIn, ISupportC
 
                 requirementState!.KillCount++;
 
+                if (questState.Group == QuestMasterConstants.QuestGroup)
+                {
+                    await player.InvokeViewPlugInAsync<IQuestStateResponsePlugIn>(p => p.ShowQuestStateAsync(questState)).ConfigureAwait(false);
+                }
+
                 if (killRequirement.MinimumNumber >= requirementState!.KillCount
                     && configuration.Message.GetTranslation(player.Culture) is { Length: > 0 } translation)
                 {
@@ -65,6 +72,12 @@ public class QuestMonsterKillCountPlugIn : IAttackableGotKilledPlugIn, ISupportC
                         killRequirement.MinimumNumber);
 
                     await player.ShowBlueMessageAsync(message).ConfigureAwait(false);
+                }
+
+                if (questState.Group == QuestMasterConstants.QuestGroup && QuestMasterText.AreKillsMet(questState, questState.ActiveQuest))
+                {
+                    var template = QuestMasterText.GetConfiguration(player).KillsMetChat;
+                    await player.ShowBlueMessageAsync(string.Format(template, questState.ActiveQuest.Number)).ConfigureAwait(false);
                 }
             }
         }
