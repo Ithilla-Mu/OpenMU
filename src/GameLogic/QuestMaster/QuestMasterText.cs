@@ -30,14 +30,18 @@ public static class QuestMasterText
 
     /// <summary>
     /// Finds the map on which the monster has the most automatically spawning monsters (sum of quantities);
-    /// ties go to the lowest map number.
+    /// ties go to the lowest map number. Mini-game maps (the map of a mini game's entrance gate) are ignored,
+    /// so the text never names an event map such as a Devil Square.
     /// </summary>
     /// <param name="maps">The maps.</param>
     /// <param name="monster">The monster.</param>
-    /// <returns>The map, or <c>null</c> if the monster does not spawn automatically anywhere.</returns>
-    public static GameMapDefinition? FindMainMap(IEnumerable<GameMapDefinition> maps, MonsterDefinition monster)
+    /// <param name="miniGames">The mini games whose maps are ignored; <c>null</c> ignores none.</param>
+    /// <returns>The map, or <c>null</c> if the monster does not spawn automatically anywhere else.</returns>
+    public static GameMapDefinition? FindMainMap(IEnumerable<GameMapDefinition> maps, MonsterDefinition monster, IEnumerable<MiniGameDefinition>? miniGames = null)
     {
+        var miniGameMaps = (miniGames ?? Enumerable.Empty<MiniGameDefinition>()).Select(g => g.Entrance?.Map).OfType<GameMapDefinition>().ToList();
         return maps
+            .Where(map => !miniGameMaps.Contains(map))
             .Select(map => (Map: map, Count: map.MonsterSpawns
                 .Where(s => s.SpawnTrigger == SpawnTrigger.Automatic && object.Equals(s.MonsterDefinition, monster))
                 .Sum(s => (int)s.Quantity)))
@@ -109,7 +113,7 @@ public static class QuestMasterText
             return string.Empty;
         }
 
-        return FindMainMap(player.GameContext.Configuration.Maps, monster)?.Name.GetTranslation(player.Culture) ?? string.Empty;
+        return FindMainMap(player.GameContext.Configuration.Maps, monster, player.GameContext.Configuration.MiniGameDefinitions)?.Name.GetTranslation(player.Culture) ?? string.Empty;
     }
 
     /// <summary>
