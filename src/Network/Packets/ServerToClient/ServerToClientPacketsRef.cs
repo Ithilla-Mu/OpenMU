@@ -28049,6 +28049,119 @@ public readonly ref struct QuestStepInfoRef
 
 
 /// <summary>
+/// Is sent by the server when: Before a quest is announced to the client by its quest number and group, so the client can look up the text of that quest.
+/// Causes reaction on client side: The client caches the title and summary of the quest, and shows them wherever it displays this quest.
+/// </summary>
+public readonly ref struct QuestTextRef
+{
+    private readonly Span<byte> _data;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="QuestTextRef"/> struct.
+    /// </summary>
+    /// <param name="data">The underlying data.</param>
+    public QuestTextRef(Span<byte> data)
+        : this(data, true)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="QuestTextRef"/> struct.
+    /// </summary>
+    /// <param name="data">The underlying data.</param>
+    /// <param name="initialize">If set to <c>true</c>, the header data is automatically initialized and written to the underlying span.</param>
+    private QuestTextRef(Span<byte> data, bool initialize)
+    {
+        this._data = data;
+        if (initialize)
+        {
+            var header = this.Header;
+            header.Type = HeaderType;
+            header.Code = Code;
+            header.Length = (ushort)Math.Min(data.Length, Length);
+            header.SubCode = SubCode;
+        }
+    }
+
+    /// <summary>
+    /// Gets the header type of this data packet.
+    /// </summary>
+    public static byte HeaderType => 0xC2;
+
+    /// <summary>
+    /// Gets the operation code of this data packet.
+    /// </summary>
+    public static byte Code => 0xF6;
+
+    /// <summary>
+    /// Gets the operation sub-code of this data packet.
+    /// The <see cref="Code" /> is used as a grouping key.
+    /// </summary>
+    public static byte SubCode => 0xF0;
+
+    /// <summary>
+    /// Gets the initial length of this data packet. When the size is dynamic, this value may be bigger than actually needed.
+    /// </summary>
+    public static int Length => 586;
+
+    /// <summary>
+    /// Gets the header of this packet.
+    /// </summary>
+    public C2HeaderWithSubCodeRef Header => new (this._data);
+
+    /// <summary>
+    /// Gets or sets the quest number.
+    /// </summary>
+    public ushort QuestNumber
+    {
+        get => ReadUInt16LittleEndian(this._data[6..]);
+        set => WriteUInt16LittleEndian(this._data[6..], value);
+    }
+
+    /// <summary>
+    /// Gets or sets the quest group.
+    /// </summary>
+    public ushort QuestGroup
+    {
+        get => ReadUInt16LittleEndian(this._data[8..]);
+        set => WriteUInt16LittleEndian(this._data[8..], value);
+    }
+
+    /// <summary>
+    /// Gets or sets the quest title, UTF-8, padded with NUL bytes.
+    /// </summary>
+    public string Title
+    {
+        get => this._data.ExtractString(10, 64, System.Text.Encoding.UTF8);
+        set => this._data.Slice(10, 64).WriteString(value, System.Text.Encoding.UTF8);
+    }
+
+    /// <summary>
+    /// Gets or sets the quest summary, UTF-8, padded with NUL bytes.
+    /// </summary>
+    public string Summary
+    {
+        get => this._data.ExtractString(74, 512, System.Text.Encoding.UTF8);
+        set => this._data.Slice(74, 512).WriteString(value, System.Text.Encoding.UTF8);
+    }
+
+    /// <summary>
+    /// Performs an implicit conversion from a Span of bytes to a <see cref="QuestText"/>.
+    /// </summary>
+    /// <param name="packet">The packet as span.</param>
+    /// <returns>The packet as struct.</returns>
+    public static implicit operator QuestTextRef(Span<byte> packet) => new (packet, false);
+
+    /// <summary>
+    /// Performs an implicit conversion from <see cref="QuestText"/> to a Span of bytes.
+    /// </summary>
+    /// <param name="packet">The packet as struct.</param>
+    /// <returns>The packet as byte span.</returns>
+    public static implicit operator Span<byte>(QuestTextRef packet) => packet._data; 
+}
+
+
+/// <summary>
 /// Is sent by the server when: First, after the game client requested to initialize a quest and the quest is already active. Second, after the game client requested the next quest step.
 /// Causes reaction on client side: The client shows the quest progress accordingly.
 /// </summary>

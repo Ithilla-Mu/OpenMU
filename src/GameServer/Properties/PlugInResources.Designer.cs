@@ -4777,6 +4777,24 @@ namespace MUnique.OpenMU.GameServer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The default implementation of the IQuestTextPlugIn which is forwarding everything to the game client with specific data packets..
+        /// </summary>
+        public static string QuestTextPlugIn_Description {
+            get {
+                return ResourceManager.GetString("QuestTextPlugIn_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quest - Text.
+        /// </summary>
+        public static string QuestTextPlugIn_Name {
+            get {
+                return ResourceManager.GetString("QuestTextPlugIn_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Handler for rage fighter area skill attack packets (dark side)..
         /// </summary>
         public static string RageSkillAttackHandlerPlugIn_Description {

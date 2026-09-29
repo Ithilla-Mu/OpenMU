@@ -1557,6 +1557,12 @@
   <data name="QuestStartedPlugIn_Description" xml:space="preserve">
     <value>The default implementation of the IQuestStartedPlugIn which is forwarding everything to the game client with specific data packets.</value>
   </data>
+  <data name="QuestTextPlugIn_Name" xml:space="preserve">
+    <value>Quest - Text</value>
+  </data>
+  <data name="QuestTextPlugIn_Description" xml:space="preserve">
+    <value>The default implementation of the IQuestTextPlugIn which is forwarding everything to the game client with specific data packets.</value>
+  </data>
   <data name="QuestStateResponseExtendedPlugIn_Name" xml:space="preserve">
     <value>Quest State Response Extended</value>
   </data>

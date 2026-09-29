@@ -6169,6 +6169,40 @@ public static class ConnectionExtensions
     }
 
     /// <summary>
+    /// Sends a <see cref="QuestText" /> to this connection.
+    /// </summary>
+    /// <param name="connection">The connection.</param>
+    /// <param name="questNumber">The quest number.</param>
+    /// <param name="questGroup">The quest group.</param>
+    /// <param name="title">The quest title, UTF-8, padded with NUL bytes.</param>
+    /// <param name="summary">The quest summary, UTF-8, padded with NUL bytes.</param>
+    /// <remarks>
+    /// Is sent by the server when: Before a quest is announced to the client by its quest number and group, so the client can look up the text of that quest.
+    /// Causes reaction on client side: The client caches the title and summary of the quest, and shows them wherever it displays this quest.
+    /// </remarks>
+    public static async ValueTask SendQuestTextAsync(this IConnection? connection, ushort @questNumber, ushort @questGroup, string @title, string @summary)
+    {
+        if (connection is null)
+        {
+            return;
+        }
+
+        int WritePacket()
+        {
+            var length = QuestTextRef.Length;
+            var packet = new QuestTextRef(connection.Output.GetSpan(length)[..length]);
+            packet.QuestNumber = @questNumber;
+            packet.QuestGroup = @questGroup;
+            packet.Title = @title;
+            packet.Summary = @summary;
+
+            return packet.Header.Length;
+        }
+
+        await connection.SendAsync(WritePacket).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Sends a <see cref="QuestCompletionResponse" /> to this connection.
     /// </summary>
     /// <param name="connection">The connection.</param>

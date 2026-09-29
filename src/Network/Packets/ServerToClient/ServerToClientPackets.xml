@@ -10604,6 +10604,42 @@
       </Fields>
     </Packet>
     <Packet>
+      <HeaderType>C2HeaderWithSubCode</HeaderType>
+      <Code>F6</Code>
+      <SubCode>F0</SubCode>
+      <Name>QuestText</Name>
+      <Length>586</Length>
+      <Direction>ServerToClient</Direction>
+      <SentWhen>Before a quest is announced to the client by its quest number and group, so the client can look up the text of that quest.</SentWhen>
+      <CausedReaction>The client caches the title and summary of the quest, and shows them wherever it displays this quest.</CausedReaction>
+      <Fields>
+        <Field>
+          <Index>6</Index>
+          <Type>ShortLittleEndian</Type>
+          <Name>QuestNumber</Name>
+        </Field>
+        <Field>
+          <Index>8</Index>
+          <Type>ShortLittleEndian</Type>
+          <Name>QuestGroup</Name>
+        </Field>
+        <Field>
+          <Index>10</Index>
+          <Type>String</Type>
+          <Name>Title</Name>
+          <Length>64</Length>
+          <Description>The quest title, UTF-8, padded with NUL bytes.</Description>
+        </Field>
+        <Field>
+          <Index>74</Index>
+          <Type>String</Type>
+          <Name>Summary</Name>
+          <Length>512</Length>
+          <Description>The quest summary, UTF-8, padded with NUL bytes.</Description>
+        </Field>
+      </Fields>
+    </Packet>
+    <Packet>
       <HeaderType>C1HeaderWithSubCode</HeaderType>
       <Code>F6</Code>
       <SubCode>0C</SubCode>

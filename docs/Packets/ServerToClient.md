@@ -300,4 +300,5 @@
   * [C1 F6 1A - QuestStateList (by server)](C1-F6-1A-QuestStateList_by-server.md)
   * [C1 F6 1B - QuestState (by server)](C1-F6-1B-QuestState_by-server.md)
   * [C2 F6 1B - QuestStateExtended (by server)](C2-F6-1B-QuestStateExtended_by-server.md)
+  * [C2 F6 F0 - QuestText (by server)](C2-F6-F0-QuestText_by-server.md)
   * [C3 F9 01 - OpenNpcDialog (by server)](C3-F9-01-OpenNpcDialog_by-server.md)
