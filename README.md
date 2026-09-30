@@ -1,6 +1,7 @@
 # OpenMU Project
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/MUnique/OpenMU)
 [![.NET Core](https://github.com/winterstorm-mu/OpenMU/actions/workflows/dotnetcore.yml/badge.svg?branch=master)](https://github.com/winterstorm-mu/OpenMU/actions/workflows/dotnetcore.yml)
 [![Documentation website](https://github.com/winterstorm-mu/OpenMU/actions/workflows/docs-website.yml/badge.svg?branch=master)](https://github.com/winterstorm-mu/OpenMU/actions/workflows/docs-website.yml)
 
