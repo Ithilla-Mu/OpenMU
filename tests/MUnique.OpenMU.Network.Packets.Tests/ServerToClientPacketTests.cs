@@ -6135,6 +6135,36 @@ public class PacketStructureTests
     }
 
     /// <summary>
+    /// Tests the packet size calculation for QuestText.
+    /// </summary>
+    [Test]
+    public void QuestText_PacketSizeValidation()
+    {
+        // Fixed-length packet validation
+        const int expectedLength = 586;
+        var actualLength = QuestTextRef.Length;
+        
+        Assert.That(actualLength, Is.EqualTo(expectedLength), 
+            "Packet length mismatch: declared length does not match calculated size");
+        
+        // Validate field 'QuestNumber' boundary
+        Assert.That(6 + 2, Is.LessThanOrEqualTo(expectedLength), 
+            "Field 'QuestNumber' exceeds packet boundary");
+        
+        // Validate field 'QuestGroup' boundary
+        Assert.That(8 + 2, Is.LessThanOrEqualTo(expectedLength), 
+            "Field 'QuestGroup' exceeds packet boundary");
+        
+        // Validate field 'Title' boundary
+        Assert.That(10 + 64, Is.LessThanOrEqualTo(expectedLength), 
+            "Field 'Title' exceeds packet boundary");
+        
+        // Validate field 'Summary' boundary
+        Assert.That(74 + 512, Is.LessThanOrEqualTo(expectedLength), 
+            "Field 'Summary' exceeds packet boundary");
+    }
+
+    /// <summary>
     /// Tests the packet size calculation for QuestProgress.
     /// </summary>
     [Test]
