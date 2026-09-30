@@ -1,19 +1,9 @@
 # OpenMU Project
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d0f57e29e7524dadb677561389256d8b)](https://app.codacy.com/gh/MUnique/OpenMU/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/MUnique/OpenMU)
-[![Discord chat](https://img.shields.io/discord/669595902750490698?logo=discord)](https://discord.gg/2u5Agkd)
-
-| Platform       |Build Status          |
-|----------------|----------------------|
-| Windows        | ![Windows Build Status](https://dev.azure.com/MUnique/OpenMU/_apis/build/status/MUnique.OpenMU?branchName=master) |
-| Linux (Docker) | [![Docker Build Status](https://dev.azure.com/MUnique/OpenMU/_apis/build/status/MUnique.OpenMU%20Docker?branchName=master)](https://hub.docker.com/r/munique/openmu)  |
-
-| NuGet Packages |   |
-|----------------|---|
-| MUnique.OpenMU.Network | [![NuGet Badge](https://img.shields.io/nuget/v/MUnique.OpenMU.Network)](https://www.nuget.org/packages/MUnique.OpenMU.Network/) |
-| MUnique.OpenMU.Network.Packets | [![NuGet Badge](https://img.shields.io/nuget/v/MUnique.OpenMU.Network.Packets)](https://www.nuget.org/packages/MUnique.OpenMU.Network.Packets/) |
+[![.NET Core](https://github.com/winterstorm-mu/OpenMU/actions/workflows/dotnetcore.yml/badge.svg?branch=master)](https://github.com/winterstorm-mu/OpenMU/actions/workflows/dotnetcore.yml)
+[![Documentation website](https://github.com/winterstorm-mu/OpenMU/actions/workflows/docs-website.yml/badge.svg?branch=master)](https://github.com/winterstorm-mu/OpenMU/actions/workflows/docs-website.yml)
 
 This project aims to create an easy to use, extendable and customizable server
 for a MMORPG called "MU Online".

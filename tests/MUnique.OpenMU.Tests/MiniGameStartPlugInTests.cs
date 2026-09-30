@@ -338,6 +338,7 @@ public class MiniGameStartPlugInTests
         contextMock.SetupGet(c => c.Configuration).Returns(new GameConfiguration());
         contextMock.SetupGet(c => c.DropGenerator).Returns(NullDropGenerator.Instance);
         contextMock.SetupGet(c => c.MiniGames).Returns(manager);
+        contextMock.SetupGet(c => c.ServerTimeZone).Returns(TimeZoneInfo.Utc);
         return (contextMock, manager);
     }
 
@@ -387,6 +388,10 @@ public class MiniGameStartPlugInTests
             definition,
             gameContextMock.Object,
             mapInitializerMock.Object);
+
+        // Mirrors MiniGameManager.GetOrCreateAsync, which starts the loop after
+        // construction so overridden members read post-construction values.
+        game.EnsureGameLoopRunning();
         this._gamesToDispose.Add(game);
         return game;
     }
