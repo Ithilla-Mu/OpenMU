@@ -102,7 +102,8 @@ public class QuestMasterNpcPlugIn : IPlayerTalkToNpcPlugIn, ISupportCustomConfig
                         break;
                     }
 
-                    var item = player.PersistenceContext.CreateNew<Item>();
+                    // A ground item must be temporary: DroppedItem.TryPickUpByAsync attaches any other item as already persisted.
+                    var item = new TemporaryItem();
                     item.AssignValues(reward.ItemReward);
                     await map.AddAsync(new DroppedItem(item, player.Position, map, player, player.GetAsEnumerable())).ConfigureAwait(false);
                     break;
