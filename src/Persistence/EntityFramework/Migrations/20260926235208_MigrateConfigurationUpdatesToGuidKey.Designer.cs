@@ -3,6 +3,7 @@ using System;
 using MUnique.OpenMU.Persistence.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MUnique.OpenMU.Persistence.EntityFramework.Migrations
 {
     [DbContext(typeof(EntityDataContext))]
-    partial class EntityDataContextModelSnapshot : ModelSnapshot
+    [Migration("20260926235208_MigrateConfigurationUpdatesToGuidKey")]
+    partial class MigrateConfigurationUpdatesToGuidKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,9 +56,6 @@ namespace MUnique.OpenMU.Persistence.EntityFramework.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)")
                         .HasDefaultValue("en");
-
-                    b.Property<DateTime?>("LastLogoutAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LoginName")
                         .IsRequired()
@@ -1468,12 +1468,6 @@ namespace MUnique.OpenMU.Persistence.EntityFramework.Migrations
                     b.Property<bool>("ClampMoneyOnPickup")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("ClassAwareDropMode")
-                        .HasColumnType("integer");
-
-                    b.Property<float>("ClassAwareDropWeight")
-                        .HasColumnType("real");
-
                     b.Property<double>("DamagePerOneItemDurability")
                         .HasColumnType("double precision");
 
@@ -2104,25 +2098,7 @@ namespace MUnique.OpenMU.Persistence.EntityFramework.Migrations
                     b.Property<bool>("IsBoundToCharacter")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsDroppable")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsPersonalStoreSellable")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsQuestItem")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsRepairable")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsSellableToNpc")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsStorable")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsTradable")
                         .HasColumnType("boolean");
 
                     b.Property<Guid?>("ItemSlotId")
