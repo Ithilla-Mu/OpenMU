@@ -27,9 +27,17 @@ public class PickupItemAction
         switch (droppedLocateable)
         {
             case DroppedMoney droppedMoney:
+                var moneyBefore = player.Money;
                 if (!await TryPickupMoneyAsync(player, droppedMoney).ConfigureAwait(false))
                 {
                     await player.InvokeViewPlugInAsync<IItemPickUpFailedPlugIn>(p => p.ItemPickUpFailedAsync(ItemPickFailReason.General)).ConfigureAwait(false);
+                }
+                else if (player.Money == moneyBefore)
+                {
+                    // The client sends its next pick up only after a money update (0x22) reset its latch
+                    // (MuMain ZzzInterface.cpp:1537, WSclient.cpp:6254), and the Money setter only sends
+                    // one when the value changed (Player.cs:224-229).
+                    await player.InvokeViewPlugInAsync<IUpdateMoneyPlugIn>(p => p.UpdateMoneyAsync()).ConfigureAwait(false);
                 }
 
                 break;
