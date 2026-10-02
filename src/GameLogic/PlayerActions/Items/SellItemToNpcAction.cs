@@ -71,6 +71,12 @@ public class SellItemToNpcAction
     {
         var sellingPrice = (int)this._itemPriceCalculator.CalculateSellingPrice(item, item.Durability());
         player.Logger.LogDebug("Calculated selling price {0} for item {1}", sellingPrice, item);
+        if (player.GameContext.Configuration.ClampMoneyOnPickup)
+        {
+            // The sale always completes; the part of the price which doesn't fit is lost.
+            sellingPrice = Math.Max(0, Math.Min(sellingPrice, player.GameContext.Configuration.MaximumInventoryMoney - player.Money));
+        }
+
         if (!player.TryAddMoney(sellingPrice))
         {
             // The money doesn't fit into the inventory anymore. Without the answer the request would

@@ -80,7 +80,10 @@ internal static class MoneyDistribution
     /// </summary>
     /// <param name="shares">The shares.</param>
     /// <param name="isEligible">Determines whether a player may still receive their share.</param>
-    /// <returns><c>True</c>, if at least one player received money; Otherwise, <c>false</c>.</returns>
+    /// <returns>
+    /// <c>True</c>, if the money is consumed, which is when at least one eligible player received money or was
+    /// <see cref="MoneyPayResult.Capped"/>; Otherwise, <c>false</c>.
+    /// </returns>
     public static bool TryPayShares(IReadOnlyList<MoneyShare> shares, Func<Player, bool> isEligible)
     {
         var eligible = new List<MoneyShare>(shares.Count);
@@ -114,13 +117,13 @@ internal static class MoneyDistribution
             extra = SplitByWeight(forfeited, weights);
         }
 
-        var received = false;
+        var consumed = false;
         for (int i = 0; i < eligible.Count; i++)
         {
-            received |= TryPay(eligible[i].Player, eligible[i].Amount + extra[i]);
+            consumed |= TryPay(eligible[i].Player, eligible[i].Amount + extra[i]) != MoneyPayResult.NotPaid;
         }
 
-        return received;
+        return consumed;
     }
 
     /// <summary>
@@ -129,12 +132,15 @@ internal static class MoneyDistribution
     /// </summary>
     /// <param name="player">The player which should receive the money.</param>
     /// <param name="amount">The amount, before the money rate of the player is applied.</param>
-    /// <returns><c>True</c>, if the player received money; Otherwise, <c>false</c>.</returns>
-    public static bool TryPay(Player player, uint amount)
+    /// <returns>
+    /// <see cref="MoneyPayResult.Paid"/> if money was added, <see cref="MoneyPayResult.Capped"/> if the clamp is on
+    /// and the player is already at the maximum, otherwise <see cref="MoneyPayResult.NotPaid"/>.
+    /// </returns>
+    public static MoneyPayResult TryPay(Player player, uint amount)
     {
         if (amount == 0)
         {
-            return false;
+            return MoneyPayResult.NotPaid;
         }
 
         // The rate is applied in double precision: a float multiplication would round money amounts
@@ -142,7 +148,7 @@ internal static class MoneyDistribution
         var scaled = (long)(amount * (double)(player.Attributes?[Stats.MoneyAmountRate] ?? 1.0f));
         if (scaled <= 0)
         {
-            return false;
+            return MoneyPayResult.NotPaid;
         }
 
         var amountToAdd = (int)Math.Min(scaled, int.MaxValue);
@@ -152,11 +158,11 @@ internal static class MoneyDistribution
             amountToAdd = (int)Math.Min(amountToAdd, Math.Max(0, maximumMoney - player.Money));
             if (amountToAdd <= 0)
             {
-                return false;
+                return MoneyPayResult.Capped;
             }
         }
 
-        return player.TryAddMoney(amountToAdd);
+        return player.TryAddMoney(amountToAdd) ? MoneyPayResult.Paid : MoneyPayResult.NotPaid;
     }
 
     /// <summary>

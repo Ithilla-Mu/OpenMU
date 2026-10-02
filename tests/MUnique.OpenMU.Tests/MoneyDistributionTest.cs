@@ -228,6 +228,28 @@ public class MoneyDistributionTest
         Assert.That(second.Money, Is.EqualTo(100));
     }
 
+    /// <summary>
+    /// Tests the three outcomes of paying: money added, player at the clamp maximum, and money which doesn't fit.
+    /// </summary>
+    [Test]
+    public async Task TryPayDistinguishesPaidCappedAndNotPaidAsync()
+    {
+        var player = await PlayerTestHelper.CreatePlayerAsync().ConfigureAwait(false);
+        player.GameContext.Configuration.MaximumInventoryMoney = 150;
+        player.GameContext.Configuration.ClampMoneyOnPickup = true;
+        player.Money = 100;
+
+        Assert.That(MoneyDistribution.TryPay(player, 0), Is.EqualTo(MoneyPayResult.NotPaid));
+        Assert.That(MoneyDistribution.TryPay(player, 100), Is.EqualTo(MoneyPayResult.Paid));
+        Assert.That(player.Money, Is.EqualTo(150));
+        Assert.That(MoneyDistribution.TryPay(player, 100), Is.EqualTo(MoneyPayResult.Capped));
+        Assert.That(player.Money, Is.EqualTo(150));
+
+        player.GameContext.Configuration.ClampMoneyOnPickup = false;
+        Assert.That(MoneyDistribution.TryPay(player, 100), Is.EqualTo(MoneyPayResult.NotPaid));
+        Assert.That(player.Money, Is.EqualTo(150));
+    }
+
     private static void SetMoneyRate(Player player, float rate)
     {
         player.Attributes!.AddElement(new SimpleElement(rate, AggregateType.Multiplicate), Stats.MoneyAmountRate);

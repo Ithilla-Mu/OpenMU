@@ -43,6 +43,50 @@ public class DroppedMoneyTest
     }
 
     /// <summary>
+    /// Tests that with the pick up clamp on, a player exactly at the maximum takes nothing but still consumes the drop.
+    /// </summary>
+    [Test]
+    public async Task SoloPickUpAtCapConsumesMoneyWhenClampedAsync()
+    {
+        var player = await PlayerTestHelper.CreatePlayerAsync().ConfigureAwait(false);
+        player.GameContext.Configuration.MaximumInventoryMoney = 5000;
+        player.GameContext.Configuration.ClampMoneyOnPickup = true;
+        player.Money = 5000;
+
+        var money = new DroppedMoney(DroppedAmount, new Point(100, 100), player.CurrentMap!);
+
+        Assert.That(await money.TryPickUpByAsync(player).ConfigureAwait(false), Is.True);
+        Assert.That(player.Money, Is.EqualTo(5000));
+
+        var otherPlayer = await PlayerTestHelper.CreatePlayerAsync(player.GameContext).ConfigureAwait(false);
+        otherPlayer.Money = 0;
+        Assert.That(await money.TryPickUpByAsync(otherPlayer).ConfigureAwait(false), Is.False);
+    }
+
+    /// <summary>
+    /// Tests that a party whose members are all at the maximum consumes the drop with the clamp on.
+    /// </summary>
+    [Test]
+    public async Task PartyPickUpAtCapConsumesMoneyWhenClampedAsync()
+    {
+        var first = await PlayerTestHelper.CreatePlayerAsync().ConfigureAwait(false);
+        var gameContext = first.GameContext;
+        gameContext.Configuration.MaximumInventoryMoney = 100;
+        gameContext.Configuration.ClampMoneyOnPickup = true;
+        var party = CreateParty();
+        await party.AddAsync(first).ConfigureAwait(false);
+        var second = await AddPartyMemberAsync(gameContext, party).ConfigureAwait(false);
+        first.Money = 100;
+        second.Money = 100;
+
+        var money = new DroppedMoney(200, new Point(100, 100), first.CurrentMap!, [new MoneyShare(first, 100), new MoneyShare(second, 100)]);
+
+        Assert.That(await money.TryPickUpByAsync(first).ConfigureAwait(false), Is.True);
+        Assert.That(first.Money, Is.EqualTo(100));
+        Assert.That(second.Money, Is.EqualTo(100));
+    }
+
+    /// <summary>
     /// Tests that a successful pick up still consumes the drop, so it can't be picked up twice.
     /// </summary>
     [Test]

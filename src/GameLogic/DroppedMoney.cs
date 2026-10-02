@@ -88,7 +88,7 @@ public sealed class DroppedMoney : AsyncDisposable, ILocateable
 
         if (!this.TryGiveMoneyTo(player))
         {
-            // Nobody got the money, so the drop is released again. Keeping it claimed would leave it
+            // The drop was not consumed, so it is released again. Keeping it claimed would leave it
             // lying on the map, unpickable for everyone until it expires - and then lost.
             using (await this._pickupLock.LockAsync())
             {
@@ -130,16 +130,17 @@ public sealed class DroppedMoney : AsyncDisposable, ILocateable
     }
 
     /// <summary>
-    /// Tries to hand the money over to the player, or to its party. Returns <c>false</c> if it could not be
-    /// given to anyone, e.g. because the receiver is already at the maximum inventory money.
+    /// Tries to hand the money over to the player, or to its party. Returns <c>false</c> if the drop is not
+    /// consumed, e.g. because the money doesn't fit and <c>ClampMoneyOnPickup</c> is off. With the clamp on, a
+    /// receiver already at the maximum inventory money still consumes the drop, for nothing.
     /// </summary>
     /// <param name="player">The player which picks the money up.</param>
-    /// <returns><c>True</c>, if at least one player received money; Otherwise, <c>false</c>.</returns>
+    /// <returns><c>True</c>, if the drop is consumed; Otherwise, <c>false</c>.</returns>
     private bool TryGiveMoneyTo(Player player)
     {
         if (player.Party is not { } party)
         {
-            if (!MoneyDistribution.TryPay(player, this.Amount))
+            if (MoneyDistribution.TryPay(player, this.Amount) == MoneyPayResult.NotPaid)
             {
                 player.Logger.LogDebug("Money could not be added to the inventory, Player {0}, Money {1}", player, this);
                 return false;
@@ -157,13 +158,13 @@ public sealed class DroppedMoney : AsyncDisposable, ILocateable
             ? this._shares
             : MoneyDistribution.CreateEqualShares(this.Amount, party.PartyList.OfType<Player>().ToList());
 
-        var received = MoneyDistribution.TryPayShares(shares, member => party.IsEligibleForMoney(member, player));
-        if (!received)
+        var consumed = MoneyDistribution.TryPayShares(shares, member => party.IsEligibleForMoney(member, player));
+        if (!consumed)
         {
             player.Logger.LogDebug("No party member could take the money, Player {0}, Money {1}", player, this);
         }
 
-        return received;
+        return consumed;
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "Catching all Exceptions.")]
