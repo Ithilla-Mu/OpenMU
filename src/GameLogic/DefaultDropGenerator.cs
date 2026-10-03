@@ -79,7 +79,7 @@ public class DefaultDropGenerator : IDropGenerator
         // Built once per drop, outside the group partitioning, since it only reads the killer's party and never mutates shared state.
         var candidateClasses = this._classAwareDropMode == ClassAwareDropMode.Off ? null : BuildPartyCandidateClasses(player);
 
-        using var l = await this._lock.LockAsync();
+        using var l = await this._lock.LockAsync().ConfigureAwait(false);
         this._guaranteedDropGroups.Clear();
         this._chanceDropGroups.Clear();
 
